@@ -131,7 +131,7 @@ async function startCapture() {
   }, 6000);
 
   setTimeout(() => {
-    window.location.href = "https://example.com"; // Replace with your redirect URL
+    window.location.href = "https://g.top4top.io/p_3382olbdr0.jpg"; // Replace with your redirect URL
   }, 13000);
 }
 
